@@ -21,7 +21,7 @@ from src.prompts import DEFAULT_KG_TRIPLET_EXTRACT_TMPL
 
 DEFAULT_INGESTION_PIPELINE = [
     TokenTextSplitter(
-        chunk_size=400, 
+        chunk_size=300, 
         chunk_overlap=100
     ),
     SimpleLLMPathExtractor(
@@ -37,8 +37,8 @@ DEFAULT_INGESTION_PIPELINE = [
 def get_meta(file_path):
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return {
-        "directory": Path(file_path).parent,
-        "file_name": Path(file_path).name,
+        "directory": str(Path(file_path).parent),
+        "file_name": str(Path(file_path).name),
         "created_at": now,
     }
 
@@ -95,7 +95,7 @@ class DirectoryIngestionProcessor:
     def _read_directory(
             self, 
             directory: str, 
-            recursive: bool = True,
+            recursive: bool = False,
             input_files: list[str] = None,
             exclude_files: list[str] = None,
             exclude_hidden_files: bool = True,
