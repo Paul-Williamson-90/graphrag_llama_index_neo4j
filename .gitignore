@@ -1,0 +1,9 @@
+/.venv/
+.env
+*/__pycache__/*
+/__pycache__/
+/gragdb/
+__pycache__
+scratchpad.ipynb
+neo4j-data/
+/example_data/book.txt
