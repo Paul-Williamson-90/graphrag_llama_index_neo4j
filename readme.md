@@ -14,11 +14,12 @@ pip install -r requirements.txt
 make build
 ```
 4. In your browser, go to: bolt://localhost:7687
-- You will need to create the initial user and password upon visiting this page
-- For the sakes of ease, I used:
+- Login initially using:
+    - username: neo4j
+    - password: neo4j
+- You will need to create a new password now, for the sakes of ease, I used:
     - username: neo4j
     - password: testing12345678
-    - database: neo4j
 5. Create a .env file in the root of the project folder, you will need the following env vars:
 ```env
 NEO_USERNAME=...
