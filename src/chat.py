@@ -14,12 +14,12 @@ class ChatEngineFactory:
         self.query_engine_factory = query_engine_factory
         self.prompt_template = prompt_template
 
-    def create(self):
-        query_engine = self.query_engine_factory().create()
+    def create(self, verbose: bool = True, **kwargs):
+        query_engine = self.query_engine_factory(verbose=verbose, **kwargs).create()
         chat_engine = CondenseQuestionChatEngine.from_defaults(
             query_engine=query_engine,
             condense_question_prompt=self.prompt_template,
             chat_history=[],
-            verbose=True,
+            verbose=verbose,
         )
         return chat_engine
