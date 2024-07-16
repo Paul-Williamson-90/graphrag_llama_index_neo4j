@@ -8,7 +8,7 @@ from llama_index.core.indices.property_graph import (
 )
 
 from src.models import llm_factory
-from src.db import create_graph_store
+from src.utils import create_graph_store
 from src.prompts import DEFAULT_SYNONYM_EXTRACT_TEMPLATE_TMPL
 
 

@@ -15,7 +15,7 @@ from llama_index.core.ingestion import IngestionPipeline
 
 
 from src.models import llm_factory, embedder_factory
-from src.db import create_graph_store
+from src.utils import create_graph_store
 from src.prompts import DEFAULT_KG_TRIPLET_EXTRACT_TMPL
 
 
