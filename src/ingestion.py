@@ -15,21 +15,21 @@ from llama_index.core.ingestion import IngestionPipeline
 
 
 from src.models import llm_factory, embedder_factory
-from src.utils import create_graph_store
+from src.utils import graph_store_factory
 from src.prompts import DEFAULT_KG_TRIPLET_EXTRACT_TMPL
+from src.settings import SYSTEM_SETTINGS
 
 
 DEFAULT_INGESTION_PIPELINE = [
     TokenTextSplitter(
-        chunk_size=300, 
-        chunk_overlap=100
+        chunk_size=SYSTEM_SETTINGS.chunk_size, 
+        chunk_overlap=SYSTEM_SETTINGS.chunk_overlap
     ),
     SimpleLLMPathExtractor(
         llm=llm_factory(), 
         extract_prompt=DEFAULT_KG_TRIPLET_EXTRACT_TMPL, 
-        # parse_fn=, 
-        num_workers=4, 
-        max_paths_per_chunk=10
+        num_workers=SYSTEM_SETTINGS.max_workers, 
+        max_paths_per_chunk=SYSTEM_SETTINGS.max_paths_per_chunk,
     ),
     ImplicitPathExtractor(),
 ]
@@ -80,8 +80,7 @@ class DirectoryIngestionProcessor:
             llm_factory: callable = llm_factory,
             embedder_factory: callable = embedder_factory,
             metadata_callable: Union[callable, None] = get_meta,
-            graph_store_factory: callable = create_graph_store,
-            # vector_store_factory: callable = vectorstore_factory,
+            graph_store_factory: callable = graph_store_factory,
             document_settings: DocumentSettings = DocumentSettings(),
         ):
         self.transformations = transformations
@@ -89,7 +88,6 @@ class DirectoryIngestionProcessor:
         self.embedder_factory = embedder_factory
         self.metadata_callable = metadata_callable
         self.graph_store_factory = graph_store_factory
-        # self.vector_store_factory = vector_store_factory
         self.document_settings = document_settings
 
     def _read_directory(
@@ -143,7 +141,6 @@ class DirectoryIngestionProcessor:
             documents=documents,
             llm=self.llm_factory(),
             property_graph_store=self.graph_store_factory(),
-            # vector_store=self.vector_store_factory(),
             show_progress=False,
             embed_kg_nodes=True,
             transformations=self.transformations,

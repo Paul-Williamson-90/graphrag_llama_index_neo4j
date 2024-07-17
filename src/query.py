@@ -1,5 +1,4 @@
 from llama_index.core import get_response_synthesizer
-# from llama_index.core.retrievers import LLMSynonymRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.core.indices.property_graph import (
     PGRetriever,
@@ -8,7 +7,7 @@ from llama_index.core.indices.property_graph import (
 )
 
 from src.models import llm_factory
-from src.utils import create_graph_store
+from src.utils import graph_store_factory
 from src.prompts import DEFAULT_SYNONYM_EXTRACT_TEMPLATE_TMPL
 
 
@@ -17,7 +16,7 @@ class QueryEngineFactory:
     def __init__(
             self,
             llm_factory: callable = llm_factory,
-            graph_store_factory: callable = create_graph_store,
+            graph_store_factory: callable = graph_store_factory,
             use_async: bool = False,
             verbose: bool = True,
             response_mode: str = "tree_summarize",
