@@ -5,6 +5,7 @@ from llama_index.graph_stores.neo4j import Neo4jPropertyGraphStore
 from llama_index.core import PropertyGraphIndex
 
 from src.models import llm_factory
+from src.settings import SYSTEM_SETTINGS
 
 load_dotenv()
 
@@ -46,7 +47,7 @@ def get_index()->PropertyGraphIndex:
     index = PropertyGraphIndex.from_existing(
         property_graph_store=graph_store,
         llm=llm_factory(),
-        use_async=False,
+        use_async=SYSTEM_SETTINGS.use_async,
         show_progress=True,
     )
     return index
