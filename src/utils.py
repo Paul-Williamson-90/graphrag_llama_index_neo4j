@@ -21,7 +21,7 @@ def _get_credentials(
         password: str = os.environ.get("NEO_PASSWORD"),
         url: str = os.environ.get("NEO_URL"),
         database: str = os.environ.get("NEO_DATABASE"),
-):
+)->Neo4JCredentialsManager:
     """
     Currently uses the credentials set in env vars to create credentials for access to the Neo4J database.
     For fine-grained controls, please see: https://neo4j.com/docs/operations-manual/current/tutorial/access-control/
@@ -33,7 +33,7 @@ def _get_credentials(
         database=database,
     )
 
-def graph_store_factory():
+def graph_store_factory()->Neo4jPropertyGraphStore:
     credentials = _get_credentials()
     return Neo4jPropertyGraphStore(
         username=credentials.username,

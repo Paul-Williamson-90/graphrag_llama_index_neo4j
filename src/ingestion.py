@@ -20,6 +20,7 @@ from src.prompts import DEFAULT_KG_TRIPLET_EXTRACT_TMPL
 from src.settings import SYSTEM_SETTINGS
 
 
+# Pipeline of transformations to apply to the text data before indexing.
 DEFAULT_INGESTION_PIPELINE = [
     TokenTextSplitter(
         chunk_size=SYSTEM_SETTINGS.chunk_size, 
@@ -35,6 +36,9 @@ DEFAULT_INGESTION_PIPELINE = [
 ]
 
 def get_meta(file_path):
+    """
+    Function for adding additional metadata to documents and chunks being ingested.
+    """
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return {
         "directory": str(Path(file_path).parent),
@@ -43,6 +47,9 @@ def get_meta(file_path):
     }
 
 class DocumentSettings:
+    """
+    A settings class for configuring the metadata and text templates for a Document instance.
+    """
     def __init__(
             self,
             metadata_seperator: str = "\n",
@@ -52,7 +59,12 @@ class DocumentSettings:
             excluded_llm_meta_keys: list[str]=["directory", "file_name", "created_at"],
     ):
         """
+        Initialize the DocumentSettings.
+
         Args:
+            metadata_seperator: str - the separator to use when joining metadata key-value pairs.
+            metadata_template: str - the template for formatting metadata key-value pairs.
+            text_template: str - the template for formatting the metadata and content of the document.
             excluded_llm_meta_keys: list[str] - a list of metadata keys to exclude from the LLM when retrieving.
             excluded_embed_metadata_keys: list[str] - a list of metadata keys to exclude from the embeddings when indexing.
         """
@@ -63,7 +75,16 @@ class DocumentSettings:
         self.excluded_llm_meta_keys = excluded_llm_meta_keys
 
     
-    def configure_document(self, document:Document):
+    def configure_document(self, document:Document)->Document:
+        """
+        This method configures the metadata and text templates for a Document instance.
+
+        Args:
+            document: Document - the document instance to configure.
+
+        Returns:
+            Document - the configured document instance.
+        """
         document.metadata_seperator = self.metadata_seperator
         document.metadata_template = self.metadata_template
         document.text_template = self.text_template
@@ -74,6 +95,9 @@ class DocumentSettings:
         return document
 
 class DirectoryIngestionProcessor:
+    """
+    A processor class for ingesting text data from a directory and indexing it into a property graph.
+    """
     def __init__(
             self,
             transformations: IngestionPipeline = DEFAULT_INGESTION_PIPELINE,
@@ -83,6 +107,17 @@ class DirectoryIngestionProcessor:
             graph_store_factory: callable = graph_store_factory,
             document_settings: DocumentSettings = DocumentSettings(),
         ):
+        """
+        Initialize the DirectoryIngestionProcessor.
+
+        Args:
+            transformations: IngestionPipeline - the pipeline of transformations to apply to the text data before indexing.
+            llm_factory: callable - a factory function for creating an LLM instance.
+            embedder_factory: callable - a factory function for creating an Embedder instance.
+            metadata_callable: callable - a function for adding additional metadata to documents and chunks being ingested.
+            graph_store_factory: callable - a factory function for creating a property graph store instance.
+            document_settings: DocumentSettings - the settings for configuring the metadata and text templates for a Document instance
+        """
         self.transformations = transformations
         self.llm_factory = llm_factory
         self.embedder_factory = embedder_factory
@@ -127,7 +162,19 @@ class DirectoryIngestionProcessor:
             exclude_hidden_files: bool = True,
             errors: str = "ignore",
             num_files_limit: Optional[int] = None,
-        ):
+        )->None:
+        """
+        This method processes a directory of text files, ingesting the text data and indexing it into a property graph.
+
+        Args:
+            directory: str - the directory containing the text files to process.
+            recursive: bool - whether to recursively search subdirectories.
+            input_files: list[str] - a list of specific files to include.
+            exclude_files: list[str] - a list of specific files to exclude.
+            exclude_hidden_files: bool - whether to exclude hidden files.
+            errors: str - how to handle errors during file reading.
+            num_files_limit: Optional[int] - the maximum number of files to read.
+        """
         documents = self._read_directory(
             directory=directory,
             recursive=recursive,

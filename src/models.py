@@ -7,14 +7,14 @@ from src.settings import SYSTEM_SETTINGS
 
 load_dotenv()
 
-def llm_factory():
+def llm_factory()->OpenAI:
     return OpenAI(
         model=SYSTEM_SETTINGS.model,
         api_key=os.getenv("OPENAI_API_KEY"),
         max_tokens=500,
     )
 
-def embedder_factory():
+def embedder_factory()->OpenAIEmbedding:
     return OpenAIEmbedding(
         api_key=os.getenv("OPENAI_API_KEY"),
     )
