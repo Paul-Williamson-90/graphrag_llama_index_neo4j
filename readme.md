@@ -48,7 +48,7 @@ match (n)-[r]-(m) return n, r, m
 - SimpleLLMPathExtractor is a process that for each text chunk, will use an LLM to identify entities, objects, and the relationships between them, in the style of (entity)->(predicates)->(object)
     - Entities and objects becomes nodes on the graph, whereas the predicates are the relationships between the nodes
     - Chunks also have their own node on the graph
-- ImplicitPathExtractor seeks to find relationships between existing nodes but not necessarily within the same text chunk
+- ImplicitPathExtractor seeks to find relationships between existing nodes
 - The chunks, identified entities and relationships, and any additional metadata are added to the knowledge graph, along with vector embeddings generated for all.
 ### Retrieval & answer (src.query.py)
 - A user inputs a prompt into the system, normally a question regarding the data within the graph database.
