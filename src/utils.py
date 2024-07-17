@@ -32,7 +32,7 @@ def _get_credentials(
         database=database,
     )
 
-def create_graph_store():
+def graph_store_factory():
     credentials = _get_credentials()
     return Neo4jPropertyGraphStore(
         username=credentials.username,
@@ -42,7 +42,7 @@ def create_graph_store():
     )
 
 def get_index()->PropertyGraphIndex:
-    graph_store = create_graph_store()
+    graph_store = graph_store_factory()
     index = PropertyGraphIndex.from_existing(
         property_graph_store=graph_store,
         llm=llm_factory(),
